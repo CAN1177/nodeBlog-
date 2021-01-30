@@ -1,10 +1,10 @@
+const loginChick = require('../controller/user')
 const handleUserRouter = (req, res) =>{
-	const method = req.method
+	const method = req.method 
 
 	if (method=="POST" && req.path=='/api/user/login') {
-		return {
-			message: '登录'
-		}
+		const {userName,password} = req.body
+	
 	}
 }
 

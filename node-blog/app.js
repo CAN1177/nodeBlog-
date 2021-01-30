@@ -4,7 +4,7 @@ const queryString = require("querystring");
 
 //异步处理post data
 const getPostData = (req) => {
-  const promise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (req.method != "POST") {
       resolve({});
       return;
@@ -25,14 +25,15 @@ const getPostData = (req) => {
       }
       resolve(JSON.parse(postData));
     });
-  });
+	});
+	
 };
 
 const serverHeader = (req, res) => {
   // 返回格式
   res.setHeader("Content-Type", "application/json");
 
-  // 处理路径path
+  // 处理路径path 
   const url = req.url;
   req.path = url.split("?")[0];
 

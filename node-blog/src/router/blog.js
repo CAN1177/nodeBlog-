@@ -1,8 +1,9 @@
-const { getList, getDetails } = require("../controller/blog");
+const { getList, getDetails, newBlog, updateBlog, deleteBlog } = require("../controller/blog");
 const { SuccessModel, ErrorModel } = require("../model/resModel");
 
 const handleBlogRouter = (req, res) => {
   const method = req.method;
+  const id = req.query.id;
   if (method === "GET" && req.path === "/api/blog/list") {
     const author = req.query.author || "";
     const keyword = req.query.keyword || "";
@@ -10,27 +11,28 @@ const handleBlogRouter = (req, res) => {
     return new SuccessModel(listData);
   }
   if (method === "GET" && req.path === "/api/blog/detail") {
-    const id = req.query.id;
     const listData = getDetails(id);
     return new SuccessModel(listData);
   }
 
   if (method === "POST" && req.path === "/api/blog/new") {
     const blogData = req.body;
-
-    return {
-      id: 23,
-    };
+    const data = newBlog(blogData)
+    return new SuccessModel(data);
   }
   if (method === "POST" && req.path === "/api/blog/update") {
-    return {
-      message: "更新",
-    };
+    const updateData = updateBlog(id,req.body)
+    if (!updateData) {
+      return new ErrorModel('updateBlog fail');
+    }
+    return new SuccessModel(updateData);
   }
-  if (method === "DElETE" && req.path === "/api/blog/del") {
-    return {
-      message: "删除",
-    };
+  if (method === "POST" && req.path === "/api/blog/del") {
+    const deleteData = deleteBlog(id)
+    if (!deleteData) {
+      return new ErrorModel('deleteData fail');
+    }
+    return new SuccessModel(deleteData);
   }
 };
 

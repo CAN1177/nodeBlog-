@@ -26,10 +26,23 @@ const getDetails = (id) => {
   ];
 };
 
-const newBlog = (blogData={}) => {
+const newBlog = (blogData = {}) => {
+  return {
+    id: 23,
+  };
+};
 
+const updateBlog = (id, blogData = {}) => {
+  return false;
+};
+
+const deleteBlog = (id) => {
+  return true;
 };
 module.exports = {
   getList,
   getDetails,
+  newBlog,
+  updateBlog,
+  deleteBlog,
 };
