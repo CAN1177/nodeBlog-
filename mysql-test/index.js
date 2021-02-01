@@ -14,7 +14,7 @@ const con = mysql.createConnection({
 con.connect()
 
 // 执行sql语句
-const sql = 'select * from blogs'
+const sql = 'select * from users'
 
 con.query(sql, (err,result) => {
 	if (err) {

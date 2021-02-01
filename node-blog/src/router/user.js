@@ -1,9 +1,18 @@
-const loginChick = require('../controller/user')
+const loginCheck = require('../controller/user')
+const { SuccessModel, ErrorModel } = require("../model/resModel");
+
 const handleUserRouter = (req, res) =>{
 	const method = req.method 
 
 	if (method=="POST" && req.path=='/api/user/login') {
-		const {userName,password} = req.body
+		const {username,password} = req.body
+		let result = loginCheck(username,password)
+		return result.then((data)=>{
+			if(data.username) {
+				return new SuccessModel();
+			}
+			return new ErrorModel("login fail");
+		})
 	
 	}
 }

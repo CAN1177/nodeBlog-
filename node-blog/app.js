@@ -5,35 +5,33 @@ const queryString = require("querystring");
 //异步处理post data
 const getPostData = (req) => {
   return new Promise((resolve, reject) => {
-    if (req.method != "POST") {
+    if (req.method !== "POST") {
       resolve({});
       return;
     }
-    if (req.headers["Content-Type"] != "application/json") {
+    if (req.headers["content-type"] !== "application/json") {
       resolve({});
       return;
     }
     let postData = "";
-    res.on("data", (chunk) => {
+    req.on("data", (chunk) => {
       postData += chunk.toString();
     });
-
-    res.on("end", () => {
+    req.on("end", () => {
       if (!postData) {
         resolve({});
         return;
       }
       resolve(JSON.parse(postData));
     });
-	});
-	
+  });
 };
 
 const serverHeader = (req, res) => {
   // 返回格式
   res.setHeader("Content-Type", "application/json");
 
-  // 处理路径path 
+  // 处理路径path
   const url = req.url;
   req.path = url.split("?")[0];
 
@@ -42,16 +40,25 @@ const serverHeader = (req, res) => {
   getPostData(req).then((postData) => {
     req.body = postData;
     //处理blog路由
-    const blogData = handleBlogRouter(req, res);
-    if (blogData) {
-      res.end(JSON.stringify(blogData));
+    const blogResult = handleBlogRouter(req, res);
+    if (blogResult) {
+      blogResult.then((blogData) => {
+        res.end(JSON.stringify(blogData));
+      });
       return;
     }
 
     // 处理user路由
-    const userData = handleUserRouter(req, res);
-    if (userData) {
-      res.end(JSON.stringify(userData));
+    // const userData = handleUserRouter(req, res);
+    // if (userData) {
+    //   res.end(JSON.stringify(userData));
+    //   return;
+    // }
+    const userResult = handleUserRouter(req, res);
+    if (userResult) {
+      userResult.then((userData) => {
+        res.end(JSON.stringify(userData));
+      });
       return;
     }
 
