@@ -8,8 +8,10 @@ const getCookieExpires = () => {
   d.setTime(d.getTime() + 12 * 60 * 60 * 1000);
   return d.toGMTString();
 };
+
+const { get, set } = require("./src/db/redis");
 // 全局session data
-const SESSION_DATA = {};
+// const SESSION_DATA = {};
 
 //异步处理post data
 const getPostData = (req) => {
@@ -59,24 +61,46 @@ const serverHeader = (req, res) => {
     req.cookie[key] = value;
   });
 
-  // 解析session
+  // // 解析session
+  // let needSession = false;
+  // let userId = req.cookie.userid;
+  // if (userId) {
+  //   if (SESSION_DATA[userId]) {
+  //     req.session = SESSION_DATA[userId];
+  //   } else {
+  //     SESSION_DATA[userId] = {};
+  //     req.session = SESSION_DATA[userId];
+  //   }
+  // } else {
+  //   needSession = true;
+  //   userId = `${Date.now()}_${Math.random()}`;
+  //   SESSION_DATA[userId] = {};
+  //   req.session = SESSION_DATA[userId];
+  // }
+
+  // 解析session 使用 redis
   let needSession = false;
   let userId = req.cookie.userid;
-  if (userId) {
-    if (SESSION_DATA[userId]) {
-      req.session = SESSION_DATA[userId];
-    } else {
-      SESSION_DATA[userId] = {};
-      req.session = SESSION_DATA[userId];
-    }
-  } else {
+  if (!userId) {
     needSession = true;
     userId = `${Date.now()}_${Math.random()}`;
-    SESSION_DATA[userId] = {};
-    req.session = SESSION_DATA[userId];
+    // 初始化session中的session值
+    set(userId, {});
   }
-  //处理post data
-  getPostData(req).then((postData) => {
+  req.sessionId = userId;
+  get(req.sessionId).then((sessionData) => {
+    if (sessionData === null) {
+      // 初始化session中的session值
+      set(req.sessionId, {});
+      // 设置session 为空
+      req.session={}
+    }else{
+      // 给session 实际值
+      req.session = sessionData
+    }
+    console.log('req.session: ',  req.session);
+    return  getPostData(req) // 处理post data
+  }).then((postData) => {
     req.body = postData;
     //处理blog路由
     const blogResult = handleBlogRouter(req, res);

@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "redis": "^3.0.2"
   },
   "dependencies": {
     "mysql": "^2.18.1"
