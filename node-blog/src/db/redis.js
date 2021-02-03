@@ -6,7 +6,7 @@ const redisClient = redis.createClient(REDIS_CONF.post, REDIS_CONF.host);
 redisClient.on("error", (err) => console.error(err));
 
 function set(key, value) {
-  if (typeof value === Object) {
+  if (typeof value === 'object') {
     value = JSON.stringify(value);
   }
   redisClient.set(key, value, redis.print);

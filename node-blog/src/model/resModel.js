@@ -13,7 +13,6 @@ class BaseModel {
 		}
 	}
 }
-
 class SuccessModel extends BaseModel {
 	constructor(data,message) {
 		super(data,message)
