@@ -1,6 +1,7 @@
 const handleBlogRouter = require("./src/router/blog");
 const handleUserRouter = require("./src/router/user");
 const queryString = require("querystring");
+const{ access } = require("./src/utils/log")
 
 // 获取 cookie 的过期时间
 const getCookieExpires = () => {
@@ -39,6 +40,14 @@ const getPostData = (req) => {
 };
 
 const serverHeader = (req, res) => {
+
+    // 记录 access log   ⚠️注意：  req.headers["user-agent"] 这个是为了识别那个浏览器
+    access(
+      `${req.method} -- ${req.url} -- ${
+        req.headers["user-agent"]
+      } -- ${Date.now()}`
+    );
+
   // 返回格式
   res.setHeader("Content-Type", "application/json");
 
@@ -98,7 +107,7 @@ const serverHeader = (req, res) => {
       // 给session 实际值
       req.session = sessionData
     }
-    console.log('req.session: ',  req.session);
+    // console.log('req.session: ',  req.session);
     return  getPostData(req) // 处理post data
   }).then((postData) => {
     req.body = postData;
@@ -121,7 +130,7 @@ const serverHeader = (req, res) => {
     const userResult = handleUserRouter(req, res);
     if (userResult) {
       userResult.then((userData) => {
-        console.log("userData: ", userData);
+        // console.log("userData: ", userData);
         if (needSession) {
           res.setHeader(
             "Set-Cookie",

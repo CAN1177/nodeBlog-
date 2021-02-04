@@ -15,7 +15,7 @@ const handleUserRouter = (req, res) =>{
 				req.session.realname = data.realname
 				// 把session同步到redis中
 				set(req.sessionId, req.session)
-				console.log('req.session: ', req.session);
+				// console.log('req.session: ', req.session);
 				return new SuccessModel();
 			}
 			return new ErrorModel("login fail");
