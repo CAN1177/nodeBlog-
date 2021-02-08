@@ -53,31 +53,31 @@ function getFileContent(fileName) {
 //     console.log('c data', cData)
 // })
 
-// async function readFileData() {
-//     // 同步写法
-//     try {
-//         const aData = await getFileContent('a.json')
-//         console.log('a data', aData, Date.now())
-//         const bData = await getFileContent(aData.next)
-//         console.log('b data', bData, Date.now())
-//         const cData = await getFileContent(bData.next)
-//         console.log('c data', cData,Date.now())
-//     } catch (err) {
-//         console.error(err)
-//     }
+async function readFileData() {
+    // 同步写法
+    try {
+        const aData = await getFileContent('a.json')
+        console.log('a data', aData, Date.now())
+        const bData = await getFileContent(aData.next)
+        console.log('b data', bData, Date.now())
+        const cData = await getFileContent(bData.next)
+        console.log('c data', cData,Date.now())
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+readFileData()
+
+// async function readAData() {
+//     const aData = await getFileContent('a.json')
+//     return aData
 // }
-
-// readFileData()
-
-async function readAData() {
-    const aData = await getFileContent('a.json')
-    return aData
-}
-async function test() {
-    const aData = await readAData()
-    console.log(aData)
-}
-test()
+// async function test() {
+//     const aData = await readAData()
+//     console.log(aData)
+// }
+// test()
 
 // async await 要点：
 // 1. await 后面可以追加 promise 对象，获取 resolve 的值
